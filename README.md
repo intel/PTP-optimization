@@ -21,8 +21,7 @@ As this script uses linuxptp suite it is targeted against the linux operating sy
 Use the pip to install required python packages.
 
 ```bash
-pip install numpy
-pip install sklearn
+pip install numpy scikit-learn
 ```
 
 ## Usage
