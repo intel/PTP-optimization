@@ -10,7 +10,7 @@ The software is copyrighted by the authors and is licensed under the GNU General
 
 ## Hardware
 
-PTP is implemented in PTP-aware networking hardware, that implements the IEEE 1588 standard. To succesfully run the code, an adequate Networking adapter and a proper driver must be installed in the system.
+PTP is implemented in PTP-aware networking hardware, that implements the IEEE 1588 standard. To successfully run the code, an adequate Networking adapter and a proper driver must be installed in the system.
 
 ## Software
 
@@ -26,12 +26,12 @@ pip install numpy scikit-learn
 
 ## Usage
 
-To succesfully run the script with dedault settings run following code:
+To successfully run the script with default settings run following code:
 
 ```bash
 python3 main.py --i EnpXfY
 ```
-where EpnXfY stnads for the interface name. If you want to check the interface name please run following command to print all interfaces name:
+where EpnXfY stands for the interface name. If you want to check the interface name please run following command to print all interfaces name:
 
 ```bash
 ip a
