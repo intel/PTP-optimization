@@ -10,7 +10,7 @@ The software is copyrighted by the authors and is licensed under the GNU General
 
 ## Hardware
 
-PTP is implemented in PTP-aware networking hardware, that implements the IEEE 1588 standard. To succesfully run the code, an adequate Networking adapter and a proper driver must be installed in the system.
+PTP is implemented in PTP-aware networking hardware, that implements the IEEE 1588 standard. To successfully run the code, an adequate Networking adapter and a proper driver must be installed in the system.
 
 ## Software
 
@@ -21,18 +21,17 @@ As this script uses linuxptp suite it is targeted against the linux operating sy
 Use the pip to install required python packages.
 
 ```bash
-pip install numpy
-pip install sklearn
+pip install numpy scikit-learn
 ```
 
 ## Usage
 
-To succesfully run the script with dedault settings run following code:
+To successfully run the script with default settings run following code:
 
 ```bash
 python3 main.py --i EnpXfY
 ```
-where EpnXfY stnads for the interface name. If you want to check the interface name please run following command to print all interfaces name:
+where EpnXfY stands for the interface name. If you want to check the interface name please run following command to print all interfaces name:
 
 ```bash
 ip a
@@ -45,19 +44,19 @@ Provided script accepts a set of parameters:
 | **Argument**		| **Description**								| Default |
 | --------------------- | --------------------------------------------- 				| ------- |
 | --pop_size		| Initial population size							| 8	  |
-| --pop_size		| Number of epochs								| 10	  |
+| --epochs		| Number of epochs								| 10	  |
 | --max_kp		| Max value of Kp								| 15	  |
-| --max_kp		| Max value of Ki								| 15  	  |
+| --max_ki		| Max value of Ki								| 15  	  |
 | --num_random		| Number of random parents added to each epoch					| 2	  |
 | --num_inherited	| Number of the best parents that are crossed to create a new generation	| 5	  |
 | --num_replicated	| Number of the best parents that are replicated to create a new generation 	| 4	  |
 | --mutation_coef	| Mutation coefficient								| 1	  |
 | --debug_level		| Determines level of debug prints						| 1	  |
 | --i			| Interface									| -	  |
-| --t			| Time of a single test								| 120	  |
+| --t			| Time of a single test in seconds						| 120	  |
 | --metric		| Evaluation metric (1 - MSE, 2 - RMSE, 3 - MAE)				| 1	  |
 | --elite_size		| Number of elite chromosomes							| 1	  |
 
 ## Contributing
 
-All contributions will be considered for acceptance trough pull requests. 
+All contributions will be considered for acceptance through pull requests.
