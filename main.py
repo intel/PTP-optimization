@@ -228,11 +228,11 @@ with open("log.log", "a") as f:
     f.write("\nElite:\n")
     os.chmod("log.log", 0o600)
     for creature in elite:
-        f.write(f"{population[index].Kp};{population[index].Ki};{score[index]}\n")
+        f.write(f'{creature.Kp};{creature.Ki};{creature.rating}\n')
 
 default = Creature(0.7,0.3)
 default.evaluate_data(args.debug_level, args.i, args.t, args.metric)
 
 with open("log.log", "a") as f:
     f.write("\nDefault setings:\n")
-    f.write(f"{population[index].Kp};{population[index].Ki};{score[index]}\n")
+    f.write(f'{default.Kp};{default.Ki};{default.rating}\n')
