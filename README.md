@@ -37,10 +37,9 @@ where EpnXfY stnads for the interface name. If you want to check the interface n
 ```bash
 ip a
 ```
+## Configureme
 
-## Arguments
-
-Provided script accepts a set of parameters:
+Configureme.py file must be used to configure the genetic algorithm and debug level.
 
 | **Argument**		| **Description**								| Default |
 | --------------------- | --------------------------------------------- 				| ------- |
@@ -53,10 +52,17 @@ Provided script accepts a set of parameters:
 | --num_replicated	| Number of the best parents that are replicated to create a new generation 	| 4	  |
 | --mutation_coef	| Mutation coefficient								| 1	  |
 | --debug_level		| Determines level of debug prints						| 1	  |
+| --elite_size		| Number of elite chromosomes							| 1	  |
+
+## Arguments
+
+Provided script accepts a set of parameters:
+
+| **Argument**		| **Description**								| Default |
+| --------------------- | --------------------------------------------- 				| ------- |
 | --i			| Interface									| -	  |
 | --t			| Time of a single test								| 120	  |
 | --metric		| Evaluation metric (1 - MSE, 2 - RMSE, 3 - MAE)				| 1	  |
-| --elite_size		| Number of elite chromosomes							| 1	  |
 
 ## Contributing
 
