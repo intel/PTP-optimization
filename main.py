@@ -25,6 +25,30 @@ class Range():
     def __iter__(self):
         yield self
 
+def validate_stability(Kp, Ki):
+    if (((Kp + Ki)*(Kp + Ki)) < (4*Ki)):
+        return True
+    else:
+        return False
+
+def draw_stable_kp_ki():
+    stable = False
+    while not stable:
+        Kp = random.uniform(0, config.gen_max_kp_stable)
+        Ki = random.uniform(0, config.gen_max_ki_stable)
+        if validate_stability(Kp, Ki):
+            stable = True
+    return Kp, Ki
+
+def redefine_kp_ki_to_stable(Kp, Ki):
+    stable = False
+    while not stable:
+        Kp = Kp - config.reduction_determinant * Kp
+        Ki = Ki - config.reduction_determinant * Ki
+        if validate_stability(Kp, Ki):
+            stable = True
+    return Kp, Ki
+
 #Validate interface
 adapterlist = os.listdir('/sys/class/net/')
 parser = argparse.ArgumentParser(description='Genetic algorithm for PID in PTP implementation')
@@ -36,6 +60,9 @@ parser.add_argument("--metric", default=1, choices=range(1,3), type=int, help="M
 
 args = parser.parse_args()
 
+if (config.stability_verification == True):
+    print("Stability verification enabled")
+
 #Initial population
 population = []
 elite = []
@@ -43,7 +70,11 @@ elite = []
 print("Creating initial population...")
 
 for _ in range(config.gen_population_size):
-    population.append(Creature(random.uniform(0, config.gen_max_kp), random.uniform(0, config.gen_max_ki))) #nosec
+    if (config.stability_verification == True):
+        Kp,Ki = draw_stable_kp_ki()
+        population.append(Creature(Kp,Ki))
+    else:
+        population.append(Creature(random.uniform(0, config.gen_max_kp), random.uniform(0, config.gen_max_ki))) #nosec
 
 iter = 0
 print("Initial population created!")
@@ -109,10 +140,21 @@ for epoch in range(config.gen_epochs):
         y = x + 1
         for _ in range(confug.gen_num_inherited - x - 1):
             print(x, " + ", y)
-            new_generation.append(
-                Creature(population[sorted_scores_indexes[x]].Kp, population[sorted_scores_indexes[y]].Ki))
-            new_generation.append(
-                Creature(population[sorted_scores_indexes[y]].Kp, population[sorted_scores_indexes[x]].Ki))
+            if (config.stability_verification):
+                print("Veryfing parent stability")
+                if (validate_stability(population[sorted_scores_indexes[x]].Kp, population[sorted_scores_indexes[y]].Ki)):
+                    new_generation.append(Creature(population[sorted_scores_indexes[x]].Kp, population[sorted_scores_indexes[y]].Ki))
+                else:
+                    Kp, Ki = redefine_kp_ki_to_stable(population[sorted_scores_indexes[x]].Kp, population[sorted_scores_indexes[y]].Ki)
+                    new_generation.append(Kp, Ki)
+                if (validate_stability(population[sorted_scores_indexes[Y]].Kp, population[sorted_scores_indexes[X]].Ki)):
+                    new_generation.append(Creature(population[sorted_scores_indexes[x]].Kp, population[sorted_scores_indexes[y]].Ki))
+                else:
+                    Kp, Ki = redefine_kp_ki_to_stable(population[sorted_scores_indexes[y]].Kp, population[sorted_scores_indexes[x]].Ki)
+                    new_generation.append(Kp, Ki)
+            else:
+                new_generation.append(Creature(population[sorted_scores_indexes[x]].Kp, population[sorted_scores_indexes[y]].Ki))
+                new_generation.append(Creature(population[sorted_scores_indexes[y]].Kp, population[sorted_scores_indexes[x]].Ki))
             y = y + 1
         x = x + 1
     print("New generation creation - crossed creatures added!")
@@ -146,7 +188,11 @@ for epoch in range(config.gen_epochs):
     #Adding randoms
     print("Adding new random parents")
     for _ in range(config.gen_num_random):
-        new_generation.append(Creature(random.uniform(0, config.gen_max_kp), random.uniform(0, config.gen_max_ki))) #nosec
+        if (config.stability_verification == True):
+            Kp,Ki = draw_stable_kp_ki()
+            new_generation.append(Creature(Kp,Ki))
+        else:
+            new_generation.append(Creature(random.uniform(0, config.gen_max_kp), random.uniform(0, config.gen_max_ki))) #nosec
 
     print("New generation creation - random creatures added!")
     if config.debug_level != 1:
@@ -169,6 +215,8 @@ for epoch in range(config.gen_epochs):
         rand_y = random.uniform(-1, 1) #nosec
         new_ki = creature.Ki + (rand_y * config.gen_mutation_coef)
         new_ki = max(0, min(new_ki, config.gen_max_ki))
+        if not validate_stability(new_kp, new_ki):
+            new_kp, new_ki = redefine_kp_ki_to_stable(new_kp, new_ki)
         creature.mutate(new_kp, new_ki)
     print("Mutation finished!")
     if config.debug_level != 1:

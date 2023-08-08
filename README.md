@@ -39,30 +39,32 @@ ip a
 ```
 ## Configureme
 
-Configureme.py file must be used to configure the genetic algorithm and debug level.
+Configureme.py file must be used to configure the stabiliy verification, genetic algorithm and debug level.
 
-| **Argument**		| **Description**								| Default |
-| --------------------- | --------------------------------------------- 				| ------- |
-| --pop_size		| Initial population size							| 8	  |
-| --pop_size		| Number of epochs								| 10	  |
-| --max_kp		| Max value of Kp								| 15	  |
-| --max_kp		| Max value of Ki								| 15  	  |
-| --num_random		| Number of random parents added to each epoch					| 2	  |
-| --num_inherited	| Number of the best parents that are crossed to create a new generation	| 5	  |
-| --num_replicated	| Number of the best parents that are replicated to create a new generation 	| 4	  |
-| --mutation_coef	| Mutation coefficient								| 1	  |
-| --debug_level		| Determines level of debug prints						| 1	  |
-| --elite_size		| Number of elite chromosomes							| 1	  |
+| **Argument**				| **Description**																		|
+| ------------------------- | ------------------------------------------------------------------------------------- |
+| stability_verification 	| Stability verification																|
+| reduction_determinant		| Kp and Ki reduction granularity in case of instability after mutation or crossover	|
+| gen_population_size		| Initial population size																|
+| gen_epochs				| Number of epochs																		|
+| gen_max_kp				| Max value of Kp																		|
+| gen_max_kp				| Max value of Ki																		|
+| gen_num_random			| Number of random parents added to each epoch											|
+| gen_num_inherited			| Number of the best parents that are crossed to create a new generation				|
+| gen_num_replicated		| Number of the best parents that are replicated to create a new generation 			|
+| gen_mutation_coef			| Mutation coefficient																	|
+| gen_debug_level			| Determines level of debug prints														|
+| gen_elite_size			| Number of elite chromosomes															|
 
 ## Arguments
 
 Provided script accepts a set of parameters:
 
-| **Argument**		| **Description**								| Default |
-| --------------------- | --------------------------------------------- 				| ------- |
-| --i			| Interface									| -	  |
-| --t			| Time of a single test								| 120	  |
-| --metric		| Evaluation metric (1 - MSE, 2 - RMSE, 3 - MAE)				| 1	  |
+| **Argument**			| **Description**									| Default 	|
+| --------------------- | -------------------------------------------------	| --------- |
+| --i					| Interface											| -			|
+| --t					| Time of a single test								| 120		|
+| --metric				| Evaluation metric (1 - MSE, 2 - RMSE, 3 - MAE)	| 1	 		|
 
 ## Contributing
 
