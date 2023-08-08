@@ -36,43 +36,29 @@ parser.add_argument("--metric", default=1, choices=range(1,3), type=int, help="M
 
 args = parser.parse_args()
 
-#Debug levels
-if config.debug_level == 1:
-    debug_l1 = 1
-    debug_l2 = 0
-else:
-    debug_l1 = 1
-    debug_l2 = 1
-
-if debug_l2:
-    print(args)
-
 #Initial population
 population = []
 elite = []
 
-if debug_l1:
-    print("Creating initial population...")
+print("Creating initial population...")
 
 for _ in range(config.gen_population_size):
     population.append(Creature(random.uniform(0, config.gen_max_kp), random.uniform(0, config.gen_max_ki))) #nosec
 
-if debug_l1:
-    iter = 0
-    if debug_l1:
-        print("Initial population created!")
-    if debug_l2:
-        for creature in population:
-            print("Creature", iter)
-            print(creature.Kp)
-            print(creature.Ki)
-            iter = iter + 1
+iter = 0
+print("Initial population created!")
+
+if (config.debug_level != 1):
+    for creature in population:
+        print("Creature", iter)
+        print(creature.Kp)
+        print(creature.Ki)
+        iter = iter + 1
 
 for epoch in range(config.gen_epochs):
-    if debug_l1:
-        print("***************************************************************")
-        print("EPOCH NUMBER ", epoch)
-        print("***************************************************************")
+    print("***************************************************************")
+    print("EPOCH NUMBER ", epoch)
+    print("***************************************************************")
 
     score = []
     sorted_scores_indexes = []
@@ -80,17 +66,15 @@ for epoch in range(config.gen_epochs):
     #Evaluate candidates
     i = 0
     for parent in population:
-        if debug_l1:
-            print("Evaluating creature number ", i)
+        print("Evaluating creature number ", i)
         new_kp = round(parent.Kp,2)
         new_ki = round(parent.Ki,2)
         parent.mutate(new_kp, new_ki)
-        parent.evaluate_data(config.debug_level, args.i, args.t, args.metric)
+        parent.evaluate_data(args.i, args.t, args.metric)
         score.append(parent.rating)
         i = i + 1
 
-    if debug_l1:
-        print("Score:  ", score)
+    print("Score:  ", score)
 
     #Select candidates fo new generation
     sorted_scores_indexes = numpy.argsort(score)
@@ -102,8 +86,7 @@ for epoch in range(config.gen_epochs):
         f.write(f"{population[index].Kp};{population[index].Ki};{score[index]}\n")
         os.chmod("log.log", 0o600)
 
-    if debug_l1:
-        print("Sorted Scores indexes: ", sorted_scores_indexes)
+    print("Sorted Scores indexes: ", sorted_scores_indexes)
 
     #Create Elite
     for i in range(0,config.gen_elite_size):
@@ -120,23 +103,20 @@ for epoch in range(config.gen_epochs):
     new_generation = []
 
     #Crossing parents
-    if debug_l1:
-        print("Crossing parents...")
-        x = 0
+    print("Crossing parents...")
+    x = 0
     for x in range(confg.gen_num_inherited):
         y = x + 1
         for _ in range(confug.gen_num_inherited - x - 1):
-            if debug_l1:
-                print(x, " + ", y)
+            print(x, " + ", y)
             new_generation.append(
                 Creature(population[sorted_scores_indexes[x]].Kp, population[sorted_scores_indexes[y]].Ki))
             new_generation.append(
                 Creature(population[sorted_scores_indexes[y]].Kp, population[sorted_scores_indexes[x]].Ki))
             y = y + 1
         x = x + 1
-    if debug_l1:
-        print("New generation creation - crossed creatures added!")
-    if debug_l2:
+    print("New generation creation - crossed creatures added!")
+    if config.debug_level != 1:
         iter = 0
         for creature in new_generation:
             print("New generation creature ", iter)
@@ -147,13 +127,11 @@ for epoch in range(config.gen_epochs):
     new_generation_size = len(new_generation)
 
     #Replicating parents
-    if debug_l1:
-        print("Replicating parents...")
+    print("Replicating parents...")
     for x in range(config.gen_num_replicated):
         new_generation.append(Creature(population[sorted_scores_indexes[x]].Kp, population[sorted_scores_indexes[x]].Ki))
-    if debug_l1:
-        print("New generation creation - replicated creatures added!")
-    if debug_l2:
+    print("New generation creation - replicated creatures added!")
+    if config.debug_level != 1:
         iter2 = 0
         for creature in new_generation:
             if iter2 < new_generation_size:
@@ -166,13 +144,12 @@ for epoch in range(config.gen_epochs):
     new_generation_size = len(new_generation)
 
     #Adding randoms
-    if debug_l1:
-        print("Adding new random parents")
+    print("Adding new random parents")
     for _ in range(config.gen_num_random):
         new_generation.append(Creature(random.uniform(0, config.gen_max_kp), random.uniform(0, config.gen_max_ki))) #nosec
-    if debug_l1:
-        print("New generation creation - random creatures added!")
-    if debug_l2:
+
+    print("New generation creation - random creatures added!")
+    if config.debug_level != 1:
         iter2 = 0
         for creature in new_generation:
             if iter2 < new_generation_size:
@@ -184,8 +161,7 @@ for epoch in range(config.gen_epochs):
             iter2 = iter2 + 1
 
     #Mutation
-    if debug_l1:
-        print("Mutants are coming...")
+    print("Mutants are coming...")
     for creature in new_generation:
         rand_x = random.uniform(-1, 1) #nosec
         new_kp = creature.Kp + (rand_x * config.gen_mutation_coef)
@@ -194,9 +170,8 @@ for epoch in range(config.gen_epochs):
         new_ki = creature.Ki + (rand_y * config.gen_mutation_coef)
         new_ki = max(0, min(new_ki, config.gen_max_ki))
         creature.mutate(new_kp, new_ki)
-    if debug_l1:
-        print("Mutation finished!")
-    if debug_l2:
+    print("Mutation finished!")
+    if config.debug_level != 1:
         iter = 0
         for creature in new_generation:
             print("New generation creature ", iter)
@@ -221,7 +196,7 @@ with open("log.log", "a") as f:
         f.write(f"{population[index].Kp};{population[index].Ki};{score[index]}\n")
 
 default = Creature(0.7,0.3)
-default.evaluate_data(debug_level, args.i, args.t, args.metric)
+default.evaluate_data(config.debug_level, args.i, args.t, args.metric)
 
 with open("log.log", "a") as f:
     f.write("\nDefault setings:\n")
